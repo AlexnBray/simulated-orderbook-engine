@@ -8,6 +8,21 @@ struct Order {
     float qty;
     std::string side;
     std::time_t timestamp;
-
-    Order(int id, double price, float qty, const std::string& side, std::time_t timestamp);
 };
+
+
+
+/*
+BUY / SELL
+TYPE
+PRICE
+QUANTITY
+
+
+TIMESTAMP
+
+therefore, a change is allowing the user to choose which type of order they wish to place potentially. 
+
+
+
+*/
