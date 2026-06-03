@@ -2,11 +2,17 @@
 #include <string>
 #include <ctime>
 
+
+enum side {
+    BUY,
+    SELL
+}
+
 struct Order {
     int id;
     double price;
     float qty;
-    std::string side;
+    side side;
     std::time_t timestamp;
 };
 
