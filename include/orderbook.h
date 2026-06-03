@@ -9,9 +9,10 @@ class OrderBook {
 private:
     std::map<Price, PriceLevel> bids;
     std::map<Price, PriceLevel> asks;
+
     std::unordered_map<OrderId, OrderLocation> orderIndex;
     Price bestBid = 0;
-    Price bestAsk = std::numeric_limits<Price>::max();
+    Price bestAsk = 0;
 
 public:
     void insertLimit(Order order);

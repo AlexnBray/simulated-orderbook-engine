@@ -19,11 +19,18 @@ struct Order {
 };
 
 struct PriceLevel {
-    Price               price;
-    std::list<Order>    orders;    // list not deque — stable iterators
-    Quantity            totalQty;  // cached sum, update on every insert/cancel
+    Price price;
+    std::list<Order> orders;
+    Quantity totalQty;
 };
 
+
+
+struct OrderLocation {
+    Price price;
+    Side side;
+    std::list<Order>::iterator   iter;
+};
 /*
 BUY / SELL
 TYPE
