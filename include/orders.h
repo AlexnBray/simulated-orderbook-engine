@@ -3,7 +3,7 @@
 #include <ctime>
 #include <cstdint>
 
-using Price    = std::int64_t;
+using Price = std::int64_t;
 using OrderId  = std::uint64_t;
 using Quantity = std::uint32_t;
 
@@ -18,7 +18,11 @@ struct Order {
     std::int64_t timestamp;
 };
 
-
+struct PriceLevel {
+    Price               price;
+    std::list<Order>    orders;    // list not deque — stable iterators
+    Quantity            totalQty;  // cached sum, update on every insert/cancel
+};
 
 /*
 BUY / SELL
