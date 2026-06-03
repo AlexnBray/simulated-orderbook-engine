@@ -9,13 +9,14 @@ using Quantity = std::uint32_t;
 
 enum class Side { Buy, Sell };
 
-
 struct Order {
     OrderId id;
     Price price;
     Quantity qty;
     Side ask;
     std::int64_t timestamp;
+
+    void PartialUpdate(Quantity quantity filled);
 };
 
 struct PriceLevel {
@@ -24,13 +25,12 @@ struct PriceLevel {
     Quantity totalQty;
 };
 
-
-
 struct OrderLocation {
     Price price;
     Side side;
-    std::list<Order>::iterator   iter;
+    std::list<Order>::iterator iter;
 };
+
 /*
 BUY / SELL
 TYPE
