@@ -1,19 +1,21 @@
 #pragma once
 #include <string>
 #include <ctime>
+#include <cstdint>
 
+using Price    = std::int64_t;
+using OrderId  = std::uint64_t;
+using Quantity = std::uint32_t;
 
-enum side {
-    BUY,
-    SELL
-}
+enum class Side { Buy, Sell };
+
 
 struct Order {
-    int id;
-    double price;
-    float qty;
-    side side;
-    std::time_t timestamp;
+    OrderId id;
+    Price price;
+    Quantity qty;
+    Side ask;
+    std::int64_t timestamp;
 };
 
 
@@ -28,7 +30,7 @@ QUANTITY
 TIMESTAMP
 
 therefore, a change is allowing the user to choose which type of order they wish to place potentially. 
-
+float
 
 
 */

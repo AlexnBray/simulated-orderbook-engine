@@ -148,4 +148,7 @@ CMakeFiles/orderbook.dir/cmake_pch.hxx.gch: \
  C:/msys64/ucrt64/include/c++/15.2.0/bits/vector.tcc \
  C:/msys64/ucrt64/include/c++/15.2.0/ctime \
  C:/Users/alexn/Documents/dev/projects/order_book_sim/include/orders.h \
+ C:/msys64/ucrt64/include/c++/15.2.0/cstdint \
+ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stdint.h \
+ C:/msys64/ucrt64/include/stdint.h \
  C:/Users/alexn/Documents/dev/projects/order_book_sim/include/orderbook.h
