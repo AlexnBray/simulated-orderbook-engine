@@ -1,48 +1,40 @@
-# Build directories
+# CMake/build output
 build/
-out/
 cmake-build-*/
-Debug/
-Release/
+out/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
 
-# Compiled binaries
+# Binaries/objects
 *.exe
 *.out
-*.app
-
-# Object files and intermediates
-*.o
 *.obj
-*.lib
+*.o
 *.a
-*.so
+*.lib
 *.dll
+*.so
 *.dylib
 *.pdb
 *.ilk
 
-# CMake artifacts (in case they escape build/)
-CMakeCache.txt
-CMakeFiles/
-cmake_install.cmake
-CMakeUserPresets.json
-compile_commands.json
-
-# IDE / editor files
+# Editor/local config
 .vs/
 .idea/
+.vscode/settings.json
+.vscode/*.log
 *.swp
 *.swo
 *~
-.vscode/settings.json
-.vscode/*.log
 
-# OS-specific junk
+# OS files
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# Test / coverage / profiling artifacts
+# Coverage/profiling
 *.gcda
 *.gcno
 *.gcov

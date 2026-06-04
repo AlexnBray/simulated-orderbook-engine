@@ -1,6 +1,0 @@
-# ninja log v7
-3	242	8019980641470581	CMakeFiles/orderbook.dir/src/main.cpp.obj	a74e009941e3aec2
-243	349	8019980643920221	orderbook.exe	34cc1492d658a792
-8	662	8019981755097637	CMakeFiles/orderbook.dir/cmake_pch.hxx.gch	90ce15fb704169bc
-663	772	8019981761645775	CMakeFiles/orderbook.dir/src/main.cpp.obj	e249268a75aa8433
-773	885	8019981762746918	orderbook.exe	34cc1492d658a792
