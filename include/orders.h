@@ -16,7 +16,7 @@ struct Order {
     Side ask;
     std::int64_t timestamp;
 
-    void PartialUpdate(Quantity quantity filled);
+    void PartialUpdate(Quantity quantityfilled);
 };
 
 struct PriceLevel {

@@ -167,6 +167,30 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\orderbook.dir\build.make CMakeFiles/orderbook.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/orderbook.obj: src/orderbook.cpp.obj
+.PHONY : src/orderbook.obj
+
+# target to build an object file
+src/orderbook.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orderbook.dir\build.make CMakeFiles/orderbook.dir/src/orderbook.cpp.obj
+.PHONY : src/orderbook.cpp.obj
+
+src/orderbook.i: src/orderbook.cpp.i
+.PHONY : src/orderbook.i
+
+# target to preprocess a source file
+src/orderbook.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orderbook.dir\build.make CMakeFiles/orderbook.dir/src/orderbook.cpp.i
+.PHONY : src/orderbook.cpp.i
+
+src/orderbook.s: src/orderbook.cpp.s
+.PHONY : src/orderbook.s
+
+# target to generate assembly for a file
+src/orderbook.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\orderbook.dir\build.make CMakeFiles/orderbook.dir/src/orderbook.cpp.s
+.PHONY : src/orderbook.cpp.s
+
 src/orders.obj: src/orders.cpp.obj
 .PHONY : src/orders.obj
 
@@ -206,6 +230,9 @@ help:
 	@echo ... src/main.obj
 	@echo ... src/main.i
 	@echo ... src/main.s
+	@echo ... src/orderbook.obj
+	@echo ... src/orderbook.i
+	@echo ... src/orderbook.s
 	@echo ... src/orders.obj
 	@echo ... src/orders.i
 	@echo ... src/orders.s

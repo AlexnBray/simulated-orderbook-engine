@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/orderbook.dir/cmake_pch.hxx.gch.d"
   "CMakeFiles/orderbook.dir/src/main.cpp.obj"
   "CMakeFiles/orderbook.dir/src/main.cpp.obj.d"
+  "CMakeFiles/orderbook.dir/src/orderbook.cpp.obj"
+  "CMakeFiles/orderbook.dir/src/orderbook.cpp.obj.d"
   "CMakeFiles/orderbook.dir/src/orders.cpp.obj"
   "CMakeFiles/orderbook.dir/src/orders.cpp.obj.d"
   "liborderbook.dll.a"

@@ -1,30 +1,17 @@
 #include "pch.h"
 
+void OrderBook::insertLimit(Order order) {
+    auto& book = (order.ask == Side::Buy) ? bids : asks;
+    auto& level = book[order.price];
 
+    level.price = order.price;
+    level.orders.push_back(order);
+    level.totalQty += order.qty;
 
+    auto iter = level.orders.end();
+    --iter;
+    orderIndex[order.id] = OrderLocation{order.price, order.ask, iter};
 
-OrderBook::insertLimitOrder(Order order){
-
-    auto& loc = orderIndex[order.id];
-
-    auto& map = (loc.side == Side::BUY) ? bids : asks;
-    auto& level = map[loc.price];
-
+    bestBid = bids.empty() ? 0 : bids.rbegin()->first;
+    bestAsk = asks.empty() ? 0 : asks.begin()->first;
 }
-    
-
-    Price price;
-    Side side;
-    std::list<Order>::iterator iter;
-    
-
-
-
-/*
-void cancel(OrderId id);
-    void insertMarket(Side side, Quantity qty);
-
-    Price getBestBid() const { return bestBid; }
-    Price getBestAsk() const { return bestAsk; }
-    Price getSpread()  const { return bestAsk - bestBid; }
-    */

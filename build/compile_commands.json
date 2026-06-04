@@ -16,5 +16,11 @@
   "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/orderbook.dir/includes_CXX.rsp -g -Winvalid-pch -include C:/Users/alexn/Documents/dev/projects/order_book_sim/build/CMakeFiles/orderbook.dir/cmake_pch.hxx -o CMakeFiles\\orderbook.dir\\src\\orders.cpp.obj -c C:\\Users\\alexn\\Documents\\dev\\projects\\order_book_sim\\src\\orders.cpp",
   "file": "C:/Users/alexn/Documents/dev/projects/order_book_sim/src/orders.cpp",
   "output": "CMakeFiles/orderbook.dir/src/orders.cpp.obj"
+},
+{
+  "directory": "C:/Users/alexn/Documents/dev/projects/order_book_sim/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/orderbook.dir/includes_CXX.rsp -g -Winvalid-pch -include C:/Users/alexn/Documents/dev/projects/order_book_sim/build/CMakeFiles/orderbook.dir/cmake_pch.hxx -o CMakeFiles\\orderbook.dir\\src\\orderbook.cpp.obj -c C:\\Users\\alexn\\Documents\\dev\\projects\\order_book_sim\\src\\orderbook.cpp",
+  "file": "C:/Users/alexn/Documents/dev/projects/order_book_sim/src/orderbook.cpp",
+  "output": "CMakeFiles/orderbook.dir/src/orderbook.cpp.obj"
 }
 ]

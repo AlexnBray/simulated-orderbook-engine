@@ -4,6 +4,7 @@ project(order_book_sim LANGUAGES CXX)
 add_executable(orderbook
     src/main.cpp
     src/orders.cpp
+    src/orderbook.cpp
 )
 
 target_compile_features(orderbook PRIVATE cxx_std_17)

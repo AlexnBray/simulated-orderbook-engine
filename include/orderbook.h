@@ -1,7 +1,8 @@
-#include "pch.h"
 #pragma once
-#include <string>
-#include <ctime>
+#include <map>
+#include <unordered_map>
+#include "orders.h"
+
 
 
 
@@ -9,11 +10,10 @@ class OrderBook {
 private:
     std::map<Price, PriceLevel> bids;
     std::map<Price, PriceLevel> asks;
-
     std::unordered_map<OrderId, OrderLocation> orderIndex;
     Price bestBid = std::numeric_limits<Price>::min();
     Price bestAsk = std::numeric_limits<Price>::min();
-    Price spread = std::abs(bestAsk - bestBid)
+    Price spread = std::abs(bestAsk - bestBid);
 
 public:
     void insertLimit(Order order);
@@ -24,4 +24,3 @@ public:
     Price getBestAsk() const { return bestAsk; }
     Price getSpread()  const { return bestAsk - bestBid; }
 };
-
