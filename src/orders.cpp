@@ -1,6 +1,8 @@
 #include "pch.h"
 
 
-//auto& map = (loc.side == Side::BUY) ? bids : asks;
-
+void Order::PartialUpdate(Quantity quantityfilled){
+    //condition ? expression_if_true : expression_if_false;
+    qty = (quantityfilled >= qty) ? 0 : (qty - quantityfilledq);
+}
 
