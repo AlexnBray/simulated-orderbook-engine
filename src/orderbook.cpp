@@ -21,10 +21,41 @@ void OrderBook::insertLimit(Order order) {
 
 void OrderBook::cancel(OrderId id) {
 
-    auto& place = orderIndex[id];
-    auto& book = (place.side == Side::Bid) ? bids : asks;
+    // index iterator (points to it, must be converted)
+    auto idxIt = orderIndex.find(id); // find gives an iterator to a map element and map elements are pairs
+    if (idxIt == orderIndex.end()) return;
 
+    auto& place = idxIt->second; // order location object, references second object | OrderLocation
+    auto& book = (place.side == Side::Bid) ? bids : asks; // what side it is
 
+    auto levelIter = book.find(place.price); // again gives an iterator
+    if (levelIter == book.end()) return; // checks if it exists in the map, if not continue
 
+    auto& level = levelIter->second; // maps it to the price level (second entry)
+    if (place.iter == level.orders.end()) return;
+
+    const Quantity removedQty = place.iter->qty; // iterator pointing to one order node
+    // this points to the node, then accesses the order's quantity field
+    level.orders.erase(place.iter);
+    level.totalQty = (level.totalQty > removedQty) ? (level.totalQty - removedQty) : 0;
+
+    if (level.orders.empty()) {
+        book.erase(levelIter);
+    }
+
+    orderIndex.erase(idxIt);
+    bestBid = bids.empty() ? 0 : bids.rbegin()->first;
+    bestAsk = asks.empty() ? 0 : asks.begin()->first;
 }
+/*
+Fix the return nothing 
+Duplicate ID policy on insert
+Tighter underflow assertions for qty invariants
+tests for cancel edge-cases
 
+*/
+
+OrderId generateOrderId(){
+
+    return ++nextOrderId;
+}

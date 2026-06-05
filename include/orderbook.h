@@ -14,6 +14,9 @@ private:
     Price bestBid = std::numeric_limits<Price>::min();
     Price bestAsk = std::numeric_limits<Price>::min();
     Price spread = std::abs(bestAsk - bestBid);
+    OrderId nextOrderId{0};
+
+    OrderId generateOrderId();
 
 public:
     void insertLimit(Order order); //implementation completed

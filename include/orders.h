@@ -43,7 +43,7 @@ iterator to exact node in PriceLevel.orders
 struct OrderLocation {
     Price price;
     Side side;
-    std::list<Order>::iterator iter;
+    std::list<Order>::iterator iter; // pointer like handle to a specific node in a list
 };
 
 /*
