@@ -17,6 +17,7 @@ private:
     OrderId nextOrderId{0};
 
     OrderId generateOrderId();
+    void fillOrder(Order order);
 
 public:
     void insertLimit(Order order); //implementation completed

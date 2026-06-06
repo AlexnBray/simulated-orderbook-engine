@@ -19,6 +19,18 @@ void OrderBook::insertLimit(Order order) {
     bestAsk = asks.empty() ? 0 : asks.begin()->first;
 }
 
+void OrderBook::insertMarket(Order order){
+
+    auto& book = (order.side == Side::Bid) ? bids : asks; // reference to either Side::Bid or Side::Ask
+    auto&
+
+    auto& level = book[order.price]; // if key exists returns exisitng price level reference, else creates a PriceLevel object then returns that.
+
+    level.price = order.price;
+
+    level.orders
+}
+
 void OrderBook::cancel(OrderId id) {
 
     // index iterator (points to it, must be converted)
@@ -54,8 +66,15 @@ Tighter underflow assertions for qty invariants
 tests for cancel edge-cases
 
 */
-
 OrderId generateOrderId(){
-
     return ++nextOrderId;
+}
+
+void OrderBook::fillOrder(Order order){
+    auto& book = (order.side == Side::Bid) ? bids : asks; // reference to either Side::Bid or Side::Ask
+    auto& level = book[order.price]; // if key exists returns exisitng price level reference, else creates a PriceLevel object then returns that.
+
+    level.price = order.price;
+    auto& quantity = order.qty;
+
 }
