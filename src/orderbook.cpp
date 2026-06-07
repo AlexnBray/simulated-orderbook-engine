@@ -15,7 +15,7 @@ void OrderBook::insertLimit(Order order) {
     --iter; // iter should now point to the last element
     orderIndex[order.id] = OrderLocation{order.price, order.side, iter}; //unordered_map
 
-    refreshTopOfBook()
+    refreshTopOfBook();
 }
 
 void OrderBook::insertMarket(Side side, Quantity qty) {
@@ -35,7 +35,7 @@ void OrderBook::insertMarket(Side side, Quantity qty) {
         }
     }
 
-    refreshTopOfBook;
+    refreshTopOfBook();
 }
 
 void OrderBook::cancel(OrderId id) {
@@ -106,16 +106,4 @@ void OrderBook::refreshTopOfBook(){
 
     bestBid = bids.empty() ? 0: bids.rbegin() -> first;
     bestAsk = asks.empty() ? 0 : asks.begin() -> first;
-}
-
-Price OrderBook::getBestBid() const{
-    return bestBid;
-}
-Price OrderBook::getBestAsk() const{
-    return bestAsk;
-}
-
-Price OrderBook::getSpread() const{
-
-    return (bestAsk - BestBid);
 }

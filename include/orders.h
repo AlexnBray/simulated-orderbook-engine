@@ -20,7 +20,7 @@ struct Order {
     std::int64_t timestamp;
 
     // to update partially filled orders
-    void PartialUpdate(Quantity quantityfilled);
+    void PartialUpdate(Quantity quantityfilled); // completed
 };
 
 // represents one price section in the order book.
