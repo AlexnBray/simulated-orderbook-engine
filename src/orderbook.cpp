@@ -15,8 +15,7 @@ void OrderBook::insertLimit(Order order) {
     --iter; // iter should now point to the last element
     orderIndex[order.id] = OrderLocation{order.price, order.side, iter}; //unordered_map
 
-    bestBid = bids.empty() ? 0 : bids.rbegin()->first; //if bid book is empty, sets best bid to 0, otherwise takes highest bid price
-    bestAsk = asks.empty() ? 0 : asks.begin()->first;
+    refreshTopOfBook()
 }
 
 void OrderBook::insertMarket(Side side, Quantity qty) {
@@ -36,8 +35,7 @@ void OrderBook::insertMarket(Side side, Quantity qty) {
         }
     }
 
-    bestBid = bids.empty() ? 0 : bids.rbegin()->first;
-    bestAsk = asks.empty() ? 0 : asks.begin()->first;
+    refreshTopOfBook;
 }
 
 void OrderBook::cancel(OrderId id) {
@@ -65,8 +63,7 @@ void OrderBook::cancel(OrderId id) {
     }
 
     orderIndex.erase(idxIt);
-    bestBid = bids.empty() ? 0 : bids.rbegin()->first;
-    bestAsk = asks.empty() ? 0 : asks.begin()->first;
+    refreshTopOfBook();
 }
 /*
 Fix the return nothing 
@@ -84,8 +81,8 @@ bool OrderBook::fillOrder(PriceLevel& level, Quantity& remainingQuantity) {
         return false;
     }
 
-    auto restingIter = level.orders.begin();
-    Order& restingOrder = *restingIter;
+    auto restingIter = level.orders.begin(); //pointer to firt PriceLevel
+    Order& restingOrder = *restingIter; // convert to reference
     const Quantity matched = std::min(remainingQuantity, restingOrder.qty);
 
     remainingQuantity -= matched;
@@ -98,6 +95,23 @@ bool OrderBook::fillOrder(PriceLevel& level, Quantity& remainingQuantity) {
         level.orders.erase(restingIter);
         return true;
     }
-
     return false;
+}
+
+void OrderBook::refreshTopOfBook(){
+
+    bestBid = bids.empty() ? 0: bids.rbegin() -> first;
+    bestAsk = asks.empty() ? 0 : asks.begin() -> first;
+}
+
+Price OrderBook::getBestBid() const{
+    return bestBid;
+}
+Price OrderBook::getBestAsk() const{
+    return bestAsk;
+}
+
+Price OrderBook::getSpread() const{
+
+    return (bestAsk - BestBid);
 }
