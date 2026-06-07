@@ -19,16 +19,25 @@ void OrderBook::insertLimit(Order order) {
     bestAsk = asks.empty() ? 0 : asks.begin()->first;
 }
 
-void OrderBook::insertMarket(Order order){
+void OrderBook::insertMarket(Side side, Quantity qty) {
+    Quantity remainingQuantity = qty;
+    auto& book = (side == Side::Bid) ? asks : bids; // market order consumes opposite side
 
-    auto& book = (order.side == Side::Bid) ? bids : asks; // reference to either Side::Bid or Side::Ask
-    auto&
+    while (remainingQuantity > 0 && !book.empty()) {
+        auto levelIter = (side == Side::Bid) ? book.begin() : std::prev(book.end());
+        auto& level = levelIter->second;
 
-    auto& level = book[order.price]; // if key exists returns exisitng price level reference, else creates a PriceLevel object then returns that.
+        while (remainingQuantity > 0 && !level.orders.empty()) {
+            fillOrder(level, remainingQuantity);
+        }
 
-    level.price = order.price;
+        if (level.orders.empty()) {
+            book.erase(levelIter);
+        }
+    }
 
-    level.orders
+    bestBid = bids.empty() ? 0 : bids.rbegin()->first;
+    bestAsk = asks.empty() ? 0 : asks.begin()->first;
 }
 
 void OrderBook::cancel(OrderId id) {
@@ -66,15 +75,29 @@ Tighter underflow assertions for qty invariants
 tests for cancel edge-cases
 
 */
-OrderId generateOrderId(){
+OrderId OrderBook::generateOrderId() {
     return ++nextOrderId;
 }
 
-void OrderBook::fillOrder(Order order){
-    auto& book = (order.side == Side::Bid) ? bids : asks; // reference to either Side::Bid or Side::Ask
-    auto& level = book[order.price]; // if key exists returns exisitng price level reference, else creates a PriceLevel object then returns that.
+bool OrderBook::fillOrder(PriceLevel& level, Quantity& remainingQuantity) {
+    if (level.orders.empty() || remainingQuantity == 0) {
+        return false;
+    }
 
-    level.price = order.price;
-    auto& quantity = order.qty;
+    auto restingIter = level.orders.begin();
+    Order& restingOrder = *restingIter;
+    const Quantity matched = std::min(remainingQuantity, restingOrder.qty);
 
+    remainingQuantity -= matched;
+    restingOrder.qty -= matched;
+
+    level.totalQty = (level.totalQty > matched) ? (level.totalQty - matched) : 0;
+
+    if (restingOrder.qty == 0) {
+        orderIndex.erase(restingOrder.id);
+        level.orders.erase(restingIter);
+        return true;
+    }
+
+    return false;
 }

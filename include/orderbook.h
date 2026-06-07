@@ -17,7 +17,7 @@ private:
     OrderId nextOrderId{0};
 
     OrderId generateOrderId();
-    void fillOrder(Order order);
+    bool fillOrder(PriceLevel& level, Quantity& remainingQuantity);
 
 public:
     void insertLimit(Order order); //implementation completed
