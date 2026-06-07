@@ -98,6 +98,10 @@ bool OrderBook::fillOrder(PriceLevel& level, Quantity& remainingQuantity) {
     return false;
 }
 
+
+
+/// @brief
+//////////Helper Functions //////
 void OrderBook::refreshTopOfBook(){
 
     bestBid = bids.empty() ? 0: bids.rbegin() -> first;
