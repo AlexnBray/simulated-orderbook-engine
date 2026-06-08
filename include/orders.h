@@ -21,6 +21,7 @@ struct Order {
 
     // to update partially filled orders
     void PartialUpdate(Quantity quantityfilled); // completed
+    void modifyOrder(Price price, Quantity qty, Side side);
 };
 
 // represents one price section in the order book.

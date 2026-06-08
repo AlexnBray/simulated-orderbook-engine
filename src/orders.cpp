@@ -6,3 +6,4 @@ void Order::PartialUpdate(Quantity quantityfilled){
     qty = (quantityfilled >= qty) ? 0 : (qty - quantityfilled);
 }
 
+void Order::modifyOrder();
