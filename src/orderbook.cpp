@@ -27,7 +27,7 @@ void OrderBook::insertLimit(Order order) {
 }
 
 /*
-Fix the return nothing 
+Fix the return nothing ### Done
 Duplicate ID policy on insert ####Done
 Tighter underflow assertions for qty invariants
 tests for cancel edge-cases
@@ -107,6 +107,45 @@ bool OrderBook::fillOrder(PriceLevel& level, Quantity& remainingQuantity) {
         return true;
     }
     return false;
+}
+
+void OrderBook::printBook() const {
+    std::cout << "=== ORDER BOOK ===\n";
+    std::cout << "BestBid: " << bestBid << " | BestAsk: " << bestAsk << '\n';
+
+    std::cout << "--- Asks (low -> high) ---\n";
+    if (asks.empty()) {
+        std::cout << "(empty)\n";
+    } else {
+        for (const auto& [price, level] : asks) {
+            std::cout << "Price " << price << " | LevelQty " << level.totalQty << '\n';
+            for (const auto& order : level.orders) {
+                std::cout << "  id=" << order.id
+                          << " qty=" << order.qty
+                          << " side=Ask"
+                          << " ts=" << order.timestamp << '\n';
+            }
+        }
+    }
+
+    std::cout << "--- Bids (high -> low) ---\n";
+    if (bids.empty()) {
+        std::cout << "(empty)\n";
+    } else {
+        for (auto it = bids.rbegin(); it != bids.rend(); ++it) {
+            const auto& price = it->first;
+            const auto& level = it->second;
+            std::cout << "Price " << price << " | LevelQty " << level.totalQty << '\n';
+            for (const auto& order : level.orders) {
+                std::cout << "  id=" << order.id
+                          << " qty=" << order.qty
+                          << " side=Bid"
+                          << " ts=" << order.timestamp << '\n';
+            }
+        }
+    }
+
+    std::cout << "==================\n";
 }
 
 

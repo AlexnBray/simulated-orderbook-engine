@@ -24,6 +24,7 @@ public:
     void insertLimit(Order order); //implementation completed
     void cancel(OrderId id);
     void insertMarket(Side side, Quantity qty);
+    void printBook() const;
 
     Price getBestBid() const { return bestBid; }
     Price getBestAsk() const { return bestAsk; }
