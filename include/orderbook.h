@@ -19,7 +19,7 @@ private:
     OrderId generateOrderId();
     bool fillOrder(PriceLevel& level, Quantity& remainingQuantity);
     void refreshTopOfBook();
-
+    
 public:
     void insertLimit(Order order); //implementation completed
     void cancel(OrderId id);

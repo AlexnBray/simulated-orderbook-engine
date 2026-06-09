@@ -7,16 +7,32 @@ void OrderBook::insertLimit(Order order) {
     auto& book = (order.side == Side::Bid) ? bids : asks; // reference to either Side::Bid or Side::Ask
     auto& level = book[order.price]; // if key exists returns exisitng price level reference, else creates a PriceLevel object then returns that.
 
+
     level.price = order.price;
     level.orders.push_back(order);
     level.totalQty += order.qty;
 
     auto iter = level.orders.end(); //end points to the element after the last element
     --iter; // iter should now point to the last element
+
+    // Duplicate ID policy on insert
+    auto idxIt = orderIndex.find(order.id);
+    if (idxIt != orderIndex.end()) {
+        std::cout << "This order already exists" << '\n';
+        return;
+    }
     orderIndex[order.id] = OrderLocation{order.price, order.side, iter}; //unordered_map
 
     refreshTopOfBook();
 }
+
+/*
+Fix the return nothing 
+Duplicate ID policy on insert ####Done
+Tighter underflow assertions for qty invariants
+tests for cancel edge-cases
+
+*/
 
 void OrderBook::insertMarket(Side side, Quantity qty) {
     Quantity remainingQuantity = qty;
@@ -37,6 +53,7 @@ void OrderBook::insertMarket(Side side, Quantity qty) {
 
     refreshTopOfBook();
 }
+
 
 void OrderBook::cancel(OrderId id) {
 
@@ -65,13 +82,7 @@ void OrderBook::cancel(OrderId id) {
     orderIndex.erase(idxIt);
     refreshTopOfBook();
 }
-/*
-Fix the return nothing 
-Duplicate ID policy on insert
-Tighter underflow assertions for qty invariants
-tests for cancel edge-cases
 
-*/
 OrderId OrderBook::generateOrderId() {
     return ++nextOrderId;
 }

@@ -2,6 +2,7 @@
 #include <string>
 #include <ctime>
 #include <cstdint>
+#include "pch.h"
 
 //type aliasing 
 using Price = std::int64_t;
