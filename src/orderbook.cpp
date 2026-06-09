@@ -109,9 +109,11 @@ bool OrderBook::fillOrder(PriceLevel& level, Quantity& remainingQuantity) {
     return false;
 }
 
+
+
 void OrderBook::printBook() const {
     std::cout << "=== ORDER BOOK ===\n";
-    std::cout << "BestBid: " << bestBid << " | BestAsk: " << bestAsk << '\n';
+    std::cout << "BestBid: " << bestBid << " | BestAsk: " << bestAsk << " | Spread: " << getSpread() <<'\n';
 
     std::cout << "--- Asks (low -> high) ---\n";
     if (asks.empty()) {
