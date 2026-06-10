@@ -4,9 +4,14 @@ void OrderBook::insertLimit(Order order) {
     /*
     Picks what side to place the order on, then finds/creates the price level in that map
     */
+    // Duplicate ID policy on insert
+    auto idxIt = orderIndex.find(order.id);
+    if (idxIt != orderIndex.end()) {
+        std::cout << "This order already exists" << '\n';
+        return;
+    }
     auto& book = (order.side == Side::Bid) ? bids : asks; // reference to either Side::Bid or Side::Ask
     auto& level = book[order.price]; // if key exists returns exisitng price level reference, else creates a PriceLevel object then returns that.
-
 
     level.price = order.price;
     level.orders.push_back(order);
@@ -15,12 +20,8 @@ void OrderBook::insertLimit(Order order) {
     auto iter = level.orders.end(); //end points to the element after the last element
     --iter; // iter should now point to the last element
 
-    // Duplicate ID policy on insert
-    auto idxIt = orderIndex.find(order.id);
-    if (idxIt != orderIndex.end()) {
-        std::cout << "This order already exists" << '\n';
-        return;
-    }
+    
+
     orderIndex[order.id] = OrderLocation{order.price, order.side, iter}; //unordered_map
 
     refreshTopOfBook();
