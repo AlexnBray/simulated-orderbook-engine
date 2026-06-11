@@ -64,3 +64,4 @@ float
 */
 
 Order createOrder();
+Order createMarket();

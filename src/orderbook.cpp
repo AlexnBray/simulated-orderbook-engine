@@ -46,8 +46,7 @@ tests for cancel edge-cases
 */
 
 void OrderBook::insertMarket(Side side, Quantity qty) {
-    Quantity remainingQuantity = qty;
-    matchAgainstBook(side, remainingQuantity, true);
+    matchAgainstBook(side, qty, true);
 }
 
 Quantity OrderBook::matchAgainstBook(Side side, Quantity& remainingQty, bool isMarket, Price limitPrice){
