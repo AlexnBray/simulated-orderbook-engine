@@ -19,6 +19,9 @@ private:
     OrderId generateOrderId();
     bool fillOrder(PriceLevel& level, Quantity& remainingQuantity);
     void refreshTopOfBook();
+    Quantity matchAgainstBook(Side side, Quantity& remainingQty, bool isMarket, Price limitPrice=0);
+
+
     
 public:
     void insertLimit(Order order); //implementation completed

@@ -5,12 +5,14 @@ void OrderBook::insertLimit(Order order) {
     Picks what side to place the order on, then finds/creates the price level in that map
     */
     // Duplicate ID policy on insert
+
     auto idxIt = orderIndex.find(order.id);
     if (idxIt != orderIndex.end()) {
         std::cout << "This order already exists" << '\n';
         return;
     }
     auto& book = (order.side == Side::Bid) ? bids : asks; // reference to either Side::Bid or Side::Ask
+
     auto& level = book[order.price]; // if key exists returns exisitng price level reference, else creates a PriceLevel object then returns that.
 
     level.price = order.price;
@@ -35,22 +37,48 @@ tests for cancel edge-cases
 
 void OrderBook::insertMarket(Side side, Quantity qty) {
     Quantity remainingQuantity = qty;
-    auto& book = (side == Side::Bid) ? asks : bids; // market order consumes opposite side
+    matchAgainstBook(side, remainingQuantity, true);
+}
 
-    while (remainingQuantity > 0 && !book.empty()) {
-        auto levelIter = (side == Side::Bid) ? book.begin() : std::prev(book.end());
-        auto& level = levelIter->second;
+Quantity OrderBook::matchAgainstBook(Side side, Quantity& remainingQty, bool isMarket, Price limitPrice){
 
-        while (remainingQuantity > 0 && !level.orders.empty()) {
-            fillOrder(level, remainingQuantity);
-        }
+    auto initialremaining = remainingQty;
 
-        if (level.orders.empty()) {
-            book.erase(levelIter);
-        }
+    auto& book = (side == Side::Bid) ? asks : bids;
+    if (isMarket){
+        while (remainingQty > 0 && !book.empty()) {
+            auto levelIter = (side == Side::Bid) ? book.begin() : std::prev(book.end());
+            auto& level = levelIter->second;
+
+            while (remainingQty > 0 && !level.orders.empty()) {
+                fillOrder(level, remainingQty);
+            }
+
+            if (level.orders.empty()) {
+                book.erase(levelIter);
+            }
+        } 
+    } else {
+         while (remainingQty > 0 && !book.empty()) {
+            auto levelIter = (side == Side::Bid) ? book.begin() : std::prev(book.end());
+            auto& level = levelIter->second;
+
+            if (side == Side::Bid && levelIter ->first > limitPrice) break;
+            if (side == Side::Ask && levelIter ->first < limitPrice) break;
+    
+            while (remainingQty > 0 && !level.orders.empty()) {
+                fillOrder(level, remainingQty);
+            }
+
+            if (level.orders.empty()) {
+                book.erase(levelIter);
+            }
+         }
     }
-
+    auto filledQty {initialremaining -remainingQty};
     refreshTopOfBook();
+    return filledQty;
+
 }
 
 
