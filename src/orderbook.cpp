@@ -20,8 +20,6 @@ void OrderBook::insertLimit(Order order) {
     auto iter = level.orders.end(); //end points to the element after the last element
     --iter; // iter should now point to the last element
 
-    
-
     orderIndex[order.id] = OrderLocation{order.price, order.side, iter}; //unordered_map
 
     refreshTopOfBook();

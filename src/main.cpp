@@ -12,10 +12,7 @@ int main() {
         book.insertLimit(createOrder());
         book.printBook();
 
-    
     }
-
-
     std::cout << "All basic order-book checks passed.\n";
     return 0;
 }

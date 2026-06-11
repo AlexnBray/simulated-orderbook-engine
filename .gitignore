@@ -40,3 +40,6 @@ desktop.ini
 *.gcov
 *.profraw
 *.profdata
+
+# Local planning docs
+RESUME_PROJECT_ROADMAP.md
