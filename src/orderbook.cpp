@@ -12,7 +12,17 @@ void OrderBook::insertLimit(Order order) {
         return;
     }
     auto& book = (order.side == Side::Bid) ? bids : asks; // reference to either Side::Bid or Side::Ask
-
+    Quantity remaining = order.qty;
+    if (order.side == Side::Bid && !asks.empty() && order.price >= asks.begin()->first) {
+        matchAgainstBook(order.side, remaining, false, order.price); 
+        if (remaining == 0) return;
+        order.qty = remaining;
+    }
+    if (order.side == Side::Ask && !bids.empty() && order.price <= bids.rbegin()-> first) {
+        matchAgainstBook(order.side, remaining, false, order.price); 
+        if (remaining == 0) return;
+        order.qty = remaining;
+    }
     auto& level = book[order.price]; // if key exists returns exisitng price level reference, else creates a PriceLevel object then returns that.
 
     level.price = order.price;
@@ -119,7 +129,7 @@ bool OrderBook::fillOrder(PriceLevel& level, Quantity& remainingQuantity) {
         return false;
     }
 
-    auto restingIter = level.orders.begin(); //pointer to firt PriceLevel
+    auto restingIter = level.orders.begin(); //pointer to first PriceLevel
     Order& restingOrder = *restingIter; // convert to reference
     const Quantity matched = std::min(remainingQuantity, restingOrder.qty);
 
