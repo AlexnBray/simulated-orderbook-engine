@@ -8,6 +8,8 @@
 #include <limits>
 #include <list>
 #include <cmath>
+#include <cassert>
+#include <fstream>
 
 
 //include header files here

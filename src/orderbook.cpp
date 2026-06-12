@@ -120,6 +120,7 @@ void OrderBook::cancel(OrderId id) {
     refreshTopOfBook();
 }
 
+
 OrderId OrderBook::generateOrderId() {
     return ++nextOrderId;
 }

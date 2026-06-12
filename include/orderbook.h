@@ -33,3 +33,11 @@ public:
     Price getBestAsk() const { return bestAsk; }
     Price getSpread()  const { return bestAsk - bestBid; }
 };
+
+struct LogOutput {
+    Price price;
+    Quantity qty;
+    OrderId makerId;
+    OrderId takerId;
+};
+

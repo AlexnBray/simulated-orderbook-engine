@@ -48,20 +48,6 @@ struct OrderLocation {
     std::list<Order>::iterator iter; // pointer like handle to a specific node in a list
 };
 
-/*
-BUY / SELL
-TYPE
-PRICE
-QUANTITY
-
-
-TIMESTAMP
-
-therefore, a change is allowing the user to choose which type of order they wish to place potentially. 
-float
-
-
-*/
 
 Order createOrder();
 Order createMarket();
