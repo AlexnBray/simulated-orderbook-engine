@@ -64,7 +64,7 @@ Quantity OrderBook::matchAgainstBook(Side side, Quantity& remainingQty, bool isM
             }
 
             if (level.orders.empty()) {
-                book.erase(levelIter);
+                levelIter= book.erase(levelIter);
             }
         } 
     } else {
@@ -80,7 +80,7 @@ Quantity OrderBook::matchAgainstBook(Side side, Quantity& remainingQty, bool isM
             }
 
             if (level.orders.empty()) {
-                book.erase(levelIter);
+                levelIter = book.erase(levelIter);
             }
          }
     }
@@ -97,25 +97,26 @@ void OrderBook::cancel(OrderId id) {
     auto idxIt = orderIndex.find(id); // find gives an iterator to a map element and map elements are pairs
     if (idxIt == orderIndex.end()) return;
 
-    auto& place = idxIt->second; // order location object, references second object | OrderLocation
-    auto& book = (place.side == Side::Bid) ? bids : asks; // what side it is
+    // Copy location so we can safely erase index entry early.
+    const OrderLocation loc = idxIt->second;
+    auto& book = (loc.side == Side::Bid) ? bids : asks; // what side it is
 
-    auto levelIter = book.find(place.price); // again gives an iterator
+    auto levelIter = book.find(loc.price); // again gives an iterator
     if (levelIter == book.end()) return; // checks if it exists in the map, if not continue
 
     auto& level = levelIter->second; // maps it to the price level (second entry)
-    if (place.iter == level.orders.end()) return;
+    if (loc.iter == level.orders.end()) return;
 
-    const Quantity removedQty = place.iter->qty; // iterator pointing to one order node
+    const Quantity removedQty = loc.iter->qty; // iterator pointing to one order node
     // this points to the node, then accesses the order's quantity field
-    level.orders.erase(place.iter);
+    orderIndex.erase(idxIt); // prevent stale iterator in index after erase
+    level.orders.erase(loc.iter);
     level.totalQty = (level.totalQty > removedQty) ? (level.totalQty - removedQty) : 0;
 
     if (level.orders.empty()) {
         book.erase(levelIter);
     }
 
-    orderIndex.erase(idxIt);
     refreshTopOfBook();
 }
 
@@ -139,7 +140,7 @@ bool OrderBook::fillOrder(PriceLevel& level, Quantity& remainingQuantity) {
 
     if (restingOrder.qty == 0) {
         orderIndex.erase(restingOrder.id);
-        level.orders.erase(restingIter);
+        restingIter = level.orders.erase(restingIter);
         return true;
     }
     return false;
@@ -195,3 +196,4 @@ void OrderBook::refreshTopOfBook(){
     bestBid = bids.empty() ? 0: bids.rbegin() -> first;
     bestAsk = asks.empty() ? 0 : asks.begin() -> first;
 }
+

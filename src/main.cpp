@@ -12,8 +12,7 @@ int main() {
         std::cout<<"Enter order type: ";
         if (!(std::cin >> type)) break;
 
-        
-
+    
         if (type == "limit") {
             Order order = createOrder();
             book.insertLimit(order);
