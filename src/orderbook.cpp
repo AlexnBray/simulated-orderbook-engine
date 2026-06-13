@@ -4,10 +4,12 @@ void OrderBook::insertLimit(Order order) {
     /*
     Picks what side to place the order on, then finds/creates the price level in that map
     */
-    // Duplicate ID policy on insert
-
-    auto idxIt = orderIndex.find(order.id);
-    if (idxIt != orderIndex.end()) {
+    // Ideal ID policy:
+    // - If caller didn't provide an id (0), engine assigns one.
+    // - If caller provided one, enforce uniqueness.
+    if (order.id == 0) {
+        order.id = generateOrderId();
+    } else if (orderIndex.find(order.id) != orderIndex.end()) {
         std::cout << "This order already exists" << '\n';
         return;
     }
@@ -24,7 +26,6 @@ void OrderBook::insertLimit(Order order) {
         order.qty = remaining;
     }
     auto& level = book[order.price]; // if key exists returns exisitng price level reference, else creates a PriceLevel object then returns that.
-
     level.price = order.price;
     level.orders.push_back(order);
     level.totalQty += order.qty;
@@ -197,4 +198,3 @@ void OrderBook::refreshTopOfBook(){
     bestBid = bids.empty() ? 0: bids.rbegin() -> first;
     bestAsk = asks.empty() ? 0 : asks.begin() -> first;
 }
-

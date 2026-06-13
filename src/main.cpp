@@ -4,9 +4,6 @@
 int main() {
     OrderBook book;
 
-    auto mkOrder = [](OrderId id, Price price, Quantity qty, Side side) {
-        return Order{id, price, qty, side, 0};
-    };
     while (true) {
         std::string type;
         std::cout<<"Enter order type: ";
@@ -14,8 +11,7 @@ int main() {
 
     
         if (type == "limit") {
-            Order order = createOrder();
-            book.insertLimit(order);
+            book.insertLimit(createOrder());
         } else if (type == "market") {
             Order order = createMarket();
             book.insertMarket(order.side, order.qty);

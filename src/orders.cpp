@@ -1,13 +1,8 @@
 #include "pch.h"
 
-OrderBook orderbook;
-
 void Order::PartialUpdate(Quantity quantityfilled){
     //condition ? expression_if_true : expression_if_false;
     qty = (quantityfilled >= qty) ? 0 : (qty - quantityfilled);
-    if (qty == 0){
-        orderbook.cancel(id);
-    }
 }
 
 //if quantity = 0, delete the order
@@ -19,15 +14,14 @@ void Order::modifyOrder(Price price, Quantity qty, Side side){
 
 
 Order createOrder(){
-    OrderId id;
     Quantity qty;
     Price price;
     std::string sideInput;
     Side side;
 
     while (true) {
-        std::cout << "Type ID, Price, Quantity, side(bid/ask): ";
-        if (!(std::cin >> id >> price >> qty >> sideInput)) {
+        std::cout << "Type Price, Quantity, side(bid/ask): ";
+        if (!(std::cin >> price >> qty >> sideInput)) {
             // Return a zeroed fallback order if input stream fails.
             return Order{0, 0, 0, Side::Bid, 0};
         }
@@ -43,19 +37,18 @@ Order createOrder(){
 
         std::cout << "Invalid side. Use bid or ask.\n";
     }
-
-    return Order{id, price, qty, side, 0};
+    
+    return Order{0, price, qty, side, 0};
 }
 
 Order createMarket(){
-    OrderId id;
     Quantity qty;
     std::string sideInput;
     Side side;
 
     while (true) {
-        std::cout << "Type ID, Quantity, side(bid/ask): ";
-        if (!(std::cin >> id >> qty >> sideInput)) {
+        std::cout << "Type Quantity, side(bid/ask): ";
+        if (!(std::cin >> qty >> sideInput)) {
             // Return a zeroed fallback order if input stream fails.
             return Order{0, 0, 0, Side::Bid, 0};
         }
@@ -72,6 +65,6 @@ Order createMarket(){
         std::cout << "Invalid side. Use bid or ask.\n";
     }
 
-    return Order{id, 0, qty, side, 0};
+    return Order{0, 0, qty, side, 0};
 }
 //streamlit
