@@ -1,4 +1,5 @@
 #pragma once
+#include <cstddef>
 #include <map>
 #include <unordered_map>
 #include "orders.h"
@@ -28,6 +29,9 @@ public:
     void cancel(OrderId id);
     void insertMarket(Side side, Quantity qty);
     void printBook() const;
+
+    bool hasOrder(OrderId id) const { return orderIndex.find(id) != orderIndex.end(); }
+    std::size_t orderCount() const { return orderIndex.size(); }
 
     Price getBestBid() const { return bestBid; }
     Price getBestAsk() const { return bestAsk; }
