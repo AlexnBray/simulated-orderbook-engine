@@ -1,0 +1,25 @@
+// #pragma pack lesson
+/*
+
+to make it easier for the cpu to read data, the compiler perofmrs hardware memory alignmenet, it inserts
+hidden padding bytes between your variables so that data aligns with the computers natural word size
+
+Using #pragma pack(push,1) is a special compiler directive that tells the compiler: "stop adding padding. pack these variables tightly together
+exactly 1 byte after the other."
+
+
+
+struct MarketMessage {
+    char messageType;   // 1 byte
+    uint64_t timestamp; // 8 bytes
+};
+
+You might assume that the sizeof(MarketMessage) is 1+8 = 9 bytes.
+however the compiler wants the 8-byte uint64_t to start at a memory address that is a multiple of 8. So the compiler
+inserts 7 padding bytes right after
+
+
+This is what your memory allocation looks like under the hood.
+[ messageType (1B) ] [ PADDING (7B) ] [ -------- timestamp (8B) -------- ]
+▲                                     ▲
+Byte 0                                Byte 8 (Total size: 16 bytes)

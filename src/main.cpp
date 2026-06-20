@@ -9,7 +9,7 @@ int main() {
         std::cout<<"Enter order type: ";
         if (!(std::cin >> type)) break;
 
-    
+        
         if (type == "limit") {
             book.insertLimit(createOrder());
         } else if (type == "market") {
@@ -23,3 +23,4 @@ int main() {
         book.printBook();
     }
 }
+
