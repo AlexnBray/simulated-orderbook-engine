@@ -23,3 +23,7 @@ This is what your memory allocation looks like under the hood.
 [ messageType (1B) ] [ PADDING (7B) ] [ -------- timestamp (8B) -------- ]
 ▲                                     ▲
 Byte 0                                Byte 8 (Total size: 16 bytes)
+
+
+
+work through changing the trade output
