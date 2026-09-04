@@ -6,10 +6,17 @@ void Order::PartialUpdate(Quantity quantityfilled){
 }
 
 //if quantity = 0, delete the order
+void Order::CancelOrder() const
+{
+    delete this;
+}
+
+
 
 void Order::modifyOrder(Price price, Quantity qty, Side side){
-
-    return;
+    this->price -= price;
+    this->qty -= qty;
+    this-> side = side;
 }
 
 

@@ -3,7 +3,7 @@ project(order_book_sim LANGUAGES CXX)
 
 add_executable(orderbook
     src/main.cpp
-    src/orders.cpp
+        src/Order.cpp
     src/orderbook.cpp
 )
 
