@@ -1,29 +1,29 @@
 #pragma once
-#include <string>
-#include <ctime>
 #include <cstdint>
-#include "pch.h"
+#include <list>
 
-//type aliasing 
-using Price = std::int64_t;
+// type aliasing
+using Price    = std::int64_t;
 using OrderId  = std::uint64_t;
-using Quantity = std::uint32_t;
-
+// 64-bit so real market data (e.g. Polymarket share amounts in 1e-6 base units)
+// cannot overflow a single order.
+using Quantity = std::uint64_t;
 
 enum class Side { Bid, Ask };
 
-//represents one individual order
+inline Side opposite(Side s) { return s == Side::Bid ? Side::Ask : Side::Bid; }
+inline const char* toString(Side s) { return s == Side::Bid ? "BID" : "ASK"; }
+
+// represents one individual order
 struct Order {
-    OrderId id;
-    Price price;
-    Quantity qty;
-    Side side;
-    std::int64_t timestamp;
+    OrderId id{0};          // 0 = let the engine assign one
+    Price price{0};
+    Quantity qty{0};        // remaining (open) quantity
+    Side side{Side::Bid};
+    std::int64_t timestamp{0}; // 0 = engine stamps an arrival sequence number
 
     // to update partially filled orders
-    void PartialUpdate(Quantity quantityfilled); // completed
-    void modifyOrder(Price price, Quantity qty, Side side);
-    void CancelOrder() const;
+    void PartialUpdate(Quantity quantityfilled);
 };
 
 // represents one price section in the order book.
@@ -33,7 +33,7 @@ we .push_back them into the PriceLevel structs lists (orders) therefore it is si
 we use a list so that we can easily pull orders out of their respective pricelevel containers (for order cancellations)
 */
 struct PriceLevel {
-    Price price;
+    Price price{0};
     std::list<Order> orders;
     Quantity totalQty{0}; // total quantity of volume in this price level container
 };
@@ -49,6 +49,17 @@ struct OrderLocation {
     std::list<Order>::iterator iter; // pointer like handle to a specific node in a list
 };
 
+// One execution between a resting (maker) order and an incoming (taker) order.
+// Trades always print at the maker's price.
+struct Trade {
+    Price price;
+    Quantity qty;
+    OrderId makerId;
+    OrderId takerId;
+    Side takerSide;
+    std::uint64_t sequence; // engine-wide monotonically increasing trade number
+};
 
+// Interactive (stdin) helpers used by the CLI.
 Order createOrder();
 Order createMarket();

@@ -36,6 +36,20 @@
       },
       "dependsOn": "CMake: Build",
       "problemMatcher": []
+    },
+    {
+      "label": "CTest: Run all tests",
+      "type": "shell",
+      "command": "ctest --test-dir build --output-on-failure",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "CMake: Build",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
     }
   ]
 }
