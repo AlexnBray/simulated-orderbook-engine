@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <list>
+#include "pool_allocator.h"
 
 // type aliasing
 using Price    = std::int64_t;
@@ -26,6 +27,9 @@ struct Order {
     void PartialUpdate(Quantity quantityfilled);
 };
 
+// FIFO queue of orders at one price; nodes come from a pool (see pool_allocator.h)
+using OrderList = std::list<Order, PoolAllocator<Order>>;
+
 // represents one price section in the order book.
 /*
 example, there may be many orders at each price level, to store them all
@@ -34,7 +38,7 @@ we use a list so that we can easily pull orders out of their respective pricelev
 */
 struct PriceLevel {
     Price price{0};
-    std::list<Order> orders;
+    OrderList orders;
     Quantity totalQty{0}; // total quantity of volume in this price level container
 };
 
@@ -46,7 +50,7 @@ iterator to exact node in PriceLevel.orders
 struct OrderLocation {
     Price price;
     Side side;
-    std::list<Order>::iterator iter; // pointer like handle to a specific node in a list
+    OrderList::iterator iter; // pointer like handle to a specific node in a list
 };
 
 // One execution between a resting (maker) order and an incoming (taker) order.

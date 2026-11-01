@@ -1,0 +1,25 @@
+# ninja log v5
+374	3142	1793499076714751500	CMakeFiles/orderbook_bench.dir/bench/benchmark.cpp.o	da0a51eb996f3e19
+363	3371	1793499076842991500	CMakeFiles/orderbook.dir/src/main.cpp.o	cbff257d3c6791a5
+449	3839	1793499077415537500	CMakeFiles/test_modify.dir/tests/test_modify.cpp.o	354fd109461f4d80
+456	3870	1793499077439138500	CMakeFiles/test_snapshots.dir/tests/test_snapshots.cpp.o	41af578c8b004fe
+419	4009	1793499077587748500	CMakeFiles/test_edge_cases.dir/tests/test_edge_cases.cpp.o	a98657cf7a54f17c
+386	4265	1793499077844896200	CMakeFiles/test_matching.dir/tests/test_matching.cpp.o	80b4ca0f510d6323
+469	4480	1793499078055885700	CMakeFiles/test_polymarket.dir/tests/test_polymarket.cpp.o	e541041155ed98d9
+396	4670	1793499078249578400	CMakeFiles/test_invariants.dir/tests/test_invariants.cpp.o	4e23959caf1d099e
+436	4680	1793499078249578400	CMakeFiles/test_replay.dir/tests/test_replay.cpp.o	fc3cc67b8cb014b3
+357	8304	1793499081825418300	CMakeFiles/orderbook_core.dir/cmake_pch.hxx.gch	2dbf4a8cb960033b
+8325	9358	1793499082912815300	CMakeFiles/orderbook_core.dir/src/Order.cpp.o	9ec967fbbb64ac02
+8356	9721	1793499083284880300	CMakeFiles/orderbook_core.dir/src/scenario.cpp.o	9e86df57d56c909e
+8334	10702	1793499084265932000	CMakeFiles/orderbook_core.dir/src/orderbook.cpp.o	990d33d8d2e4d184
+8381	12125	1793499085677416200	CMakeFiles/orderbook_core.dir/src/polymarketdata.cpp.o	46dd63160c178986
+12133	12534	1793499086079750200	liborderbook_core.a	ada41cad6b6aab7b
+12537	13087	1793499086638389400	orderbook_bench	eb18ae10e14c15e4
+12540	13107	1793499086663379200	test_modify	4c7945f98b0135e4
+12542	13109	1793499086665019300	test_snapshots	fedfa143caa2e40d
+12539	13115	1793499086671991600	test_edge_cases	fa61ba216d89d5e5
+12538	13123	1793499086680110700	test_matching	e41c515888dad4e8
+12539	13125	1793499086681857900	test_invariants	ed8a41dafe02626f
+12540	13157	1793499086714061000	test_replay	aae211df32b3f577
+12537	13194	1793499086752112600	orderbook	b4a1d94d93c4830a
+12543	13202	1793499086758958900	test_polymarket	b1b6fccf846d5935

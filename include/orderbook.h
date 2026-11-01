@@ -82,9 +82,13 @@ Policies:
 */
 class OrderBook {
 private:
-    std::map<Price, PriceLevel> bids; // Key is the price of the order, PriceLevel references a struct which contains a list of orders in the price level.
-    std::map<Price, PriceLevel> asks;
-    std::unordered_map<OrderId, OrderLocation> orderIndex;
+    using LevelMap = std::map<Price, PriceLevel, std::less<Price>, PoolAllocator<std::pair<const Price, PriceLevel>>>;
+    using OrderIndex = std::unordered_map<OrderId, OrderLocation, std::hash<OrderId>, std::equal_to<OrderId>,
+                                          PoolAllocator<std::pair<const OrderId, OrderLocation>>>;
+
+    LevelMap bids; // Key is the price of the order, PriceLevel references a struct which contains a list of orders in the price level.
+    LevelMap asks;
+    OrderIndex orderIndex;
     Price bestBid = 0; // 0 when that side is empty
     Price bestAsk = 0;
     OrderId nextOrderId{0};
@@ -101,7 +105,7 @@ private:
                               OrderId takerId, std::vector<Trade>& trades);
     SubmitResult submitLimit(Order order);
     void restOrder(const Order& order);
-    void removeResting(std::unordered_map<OrderId, OrderLocation>::iterator idxIt);
+    void removeResting(OrderIndex::iterator idxIt);
     void logEvent(const std::string& line);
 
 public:

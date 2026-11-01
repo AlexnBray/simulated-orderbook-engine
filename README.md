@@ -98,6 +98,7 @@ Pipeline: `CSV / raw log → OrderFilledEvent → NormalizedFill → FillReplaye
 |---|---|
 | `std::map<Price, PriceLevel>` per side | ordered levels; best bid = `rbegin`, best ask = `begin` |
 | `std::list<Order>` per level | FIFO queue; stable iterators allow O(1) erase from the middle |
+| `PoolAllocator` for all node containers | per-order allocation is a free-list pop instead of `malloc` |
 | `std::unordered_map<OrderId, OrderLocation>` | O(1) lookup of an order's level and list node for cancel/modify |
 
 | Operation | Complexity (L = price levels, k = orders filled) |
@@ -113,18 +114,63 @@ Duplicate live ids are rejected. Trades print at the maker's price. Market remai
 market order into an empty book is rejected. `checkInvariants()` validates the whole structure and runs
 after every operation in the tests.
 
-## Benchmark
+## Benchmarks
 
-`orderbook_bench 1000000`: 60% limit / 15% market / 25% cancel, prices clustered around a mid.
-Measured on WSL2 (Ubuntu 24.04, g++ 13.3, `-O2`). Numbers will vary by machine:
+**Setup:** Intel Core Ultra 7 258V, WSL2 Ubuntu 24.04, g++ 13.3 `-O3 -DNDEBUG`, single thread pinned
+with `taskset -c 2`, fixed seed 42. Workload: 1M operations, 60% limit (about half cross) / 15% market /
+25% cancel. Before/after binaries were run **interleaved** (A, B, A, B…) and the tables show the
+**median** across rounds. Latency includes about 20–30 ns of `steady_clock` overhead per sample.
+Reproduce with `python3 bench/compare.py <build-dir> 0 7 orderbook_bench`.
 
-```
-ops=1000000  time=0.457s  throughput=2187386 ops/s  trades=701596  resting=31472
-op            count    p50(ns)    p99(ns)  p99.9(ns)
-limit        600201        296       1085       2833
-market       149519        419       1322       3997
-cancel       250280         76        660       1021
-```
+### Optimization story (7 interleaved rounds, empty starting book)
+
+| Version | Throughput | Heap allocs/op | Limit p50 / p99 / p99.9 | Market p50 / p99 / p99.9 | Cancel p50 / p99 / p99.9 |
+|---|---|---|---|---|---|
+| Baseline | 2.36 M ops/s | 3.08 | 295 / 1150 / 3051 ns | 420 / 1412 / 5272 ns | 80 / 676 / 1143 ns |
+| + no log formatting when logging is off | 4.90 M ops/s | 1.78 | 148 / 491 / 1620 ns | 155 / 534 / 1411 ns | 71 / 428 / 667 ns |
+| + pooled node allocator | **5.76 M ops/s** | **0.68** | **125 / 343 / 581 ns** | **134 / 399 / 707 ns** | **67 / 312 / 524 ns** |
+
+1. **Logging on the hot path:** every command built `std::to_string` strings for the event log even when no
+   log was attached. Guarding them removed 1.3 allocations per operation.
+2. **Pool allocator** (`include/pool_allocator.h`): list nodes, hash-index nodes and price-level nodes come from
+   a per-thread free list of fixed-size slots instead of `malloc`. Insert p99 went from 1150 to 343 ns
+   (−70%), and p99.9 from 3051 to 581 ns (−81%).
+
+Net: **2.4× throughput and −70% to −87% tail latency**, with identical output (same 701,596 trades,
+all tests passing under ASan/UBSan). The slowest optimized run (4.41 M ops/s) beat the fastest baseline
+run (2.75 M ops/s).
+
+### Scaling with book depth (5 interleaved rounds)
+
+`prefill` rests extra orders outside the active price band before timing. Median latencies are in ns.
+
+| Resting orders | Version | Throughput | Limit p50 / p99 | Market p50 / p99 | Cancel p50 / p99 |
+|---|---|---|---|---|---|
+| 0 | before → after | 2.14 → 5.12 M/s | 343/1272 → 135/401 | 471/1577 → 136/465 | 96/659 → 76/416 |
+| 10,000 | before → after | 2.41 → 5.26 M/s | 296/1072 → 131/359 | 414/1295 → 132/405 | 92/754 → 71/515 |
+| 100,000 | before → after | 2.28 → 4.45 M/s | 285/1062 → 123/403 | 419/1401 → 128/579 | 185/1313 → 165/896 |
+| 1,000,000 | before → after | 1.89 → 3.27 M/s | 265/1120 → 126/387 | 439/1660 → 132/791 | 682/1407 → 591/1130 |
+
+Insert and market latency stay **flat from an empty book to 1M resting orders**, since they only touch the
+top of the book. Cancel latency grows with book size (about 70 → 590 ns p50): a random cancel in a large
+book is a cache miss on the hash index and on the list node. That is the next optimization target,
+for example a flat order array indexed by id instead of node-based containers.
+
+### Ingestion throughput (1M synthetic `OrderFilled` events, 50 outcome tokens, 25% exchange legs)
+
+Generated with `bench/gen_synthetic_fills.py`. End-to-end wall time (read → parse → sort → normalize →
+match → summarize), median of 3 runs:
+
+| Input | File size | Wall time | Throughput | Result |
+|---|---|---|---|---|
+| Decoded CSV | 263 MB | 5.06 s | **≈198k events/s** | 749,683 fills replayed, 0 mismatches |
+| Raw logs (hex topics + ABI data) | 602 MB | 13.4 s | **≈75k events/s** | identical summary |
+
+Peak memory is about 630 MB, because all events are loaded before sorting by timestamp. Streaming
+pre-sorted input would remove that. Parsing, not matching, dominates here.
+
+> On native Windows (MinGW), `steady_clock` ticks every 100 ns, so latencies appear rounded to 100 ns.
+> Use Linux for latency numbers.
 
 ## Thought flow charts
 

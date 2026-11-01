@@ -1,0 +1,36 @@
+Start testing: Nov 01 12:11 AEST
+----------------------------------------------------------
+1/11 Testing: matching
+1/11 Test: matching
+Command: "/mnt/c/Users/alexn/Documents/dev/projects/order_book_sim/build-linux/test_matching"
+Directory: /mnt/c/Users/alexn/Documents/dev/projects/order_book_sim/build-linux
+"matching" start time: Nov 01 12:11 AEST
+Output:
+----------------------------------------------------------
+[PASS] price_priority_best_ask_fills_first
+[PASS] price_priority_best_bid_fills_first
+[PASS] time_priority_fifo_within_level
+[PASS] market_order_consumes_opposite_book
+[PASS] market_order_partial_when_book_too_thin
+[PASS] crossing_limit_matches_then_remainder_rests
+[PASS] crossing_limit_respects_limit_price
+[PASS] non_crossing_limit_rests_untouched
+[PASS] partial_fill_reduces_resting_order
+[PASS] full_fill_removes_resting_order
+[PASS] trade_listener_sees_every_trade_in_order
+[PASS] deterministic_identical_runs_and_timestamps
+12 passed, 0 failed
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"matching" end time: Nov 01 12:11 AEST
+"matching" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 01 12:11 AEST
+
+matching =   0.03 sec*proc
+
+roadmap1 =   0.03 sec*proc
+

@@ -27,10 +27,10 @@ SubmitResult OrderBook::insertLimit(Order order) {
     SubmitResult result = submitLimit(order);
     if (result.status != OrderStatus::Rejected) {
         // log with the final id so a replay reproduces identical ids
-        logEvent(std::string("LIMIT ") + toString(order.side) + ' ' + std::to_string(order.price) + ' ' +
+        if (eventLog) logEvent(std::string("LIMIT ") + toString(order.side) + ' ' + std::to_string(order.price) + ' ' +
                  std::to_string(order.qty) + ' ' + std::to_string(result.id));
         for (const auto& t : result.trades) {
-            logEvent("FILL " + std::to_string(t.price) + ' ' + std::to_string(t.qty) + ' ' +
+            if (eventLog) logEvent("FILL " + std::to_string(t.price) + ' ' + std::to_string(t.qty) + ' ' +
                      std::to_string(t.makerId) + ' ' + std::to_string(t.takerId));
         }
     }
@@ -107,9 +107,9 @@ SubmitResult OrderBook::insertMarket(Side side, Quantity qty) {
     // a non-empty opposite side always fills at least one unit
     result.status = (remaining == 0) ? OrderStatus::Filled : OrderStatus::PartiallyFilled;
 
-    logEvent(std::string("MARKET ") + toString(side) + ' ' + std::to_string(qty));
+    if (eventLog) logEvent(std::string("MARKET ") + toString(side) + ' ' + std::to_string(qty));
     for (const auto& t : result.trades) {
-        logEvent("FILL " + std::to_string(t.price) + ' ' + std::to_string(t.qty) + ' ' +
+        if (eventLog) logEvent("FILL " + std::to_string(t.price) + ' ' + std::to_string(t.qty) + ' ' +
                  std::to_string(t.makerId) + ' ' + std::to_string(t.takerId));
     }
     return result;
@@ -148,11 +148,11 @@ bool OrderBook::cancel(OrderId id) {
     if (idxIt == orderIndex.end()) return false;
     removeResting(idxIt);
     refreshTopOfBook();
-    logEvent("CANCEL " + std::to_string(id));
+    if (eventLog) logEvent("CANCEL " + std::to_string(id));
     return true;
 }
 
-void OrderBook::removeResting(std::unordered_map<OrderId, OrderLocation>::iterator idxIt) {
+void OrderBook::removeResting(OrderIndex::iterator idxIt) {
     // Copy location so we can safely erase index entry early.
     const OrderLocation loc = idxIt->second;
     auto& book = (loc.side == Side::Bid) ? bids : asks; // what side it is
@@ -186,7 +186,7 @@ SubmitResult OrderBook::modify(OrderId id, Price newPrice, Quantity newQty) {
         removeResting(idxIt);
         refreshTopOfBook();
         result.status = OrderStatus::Cancelled;
-        logEvent("MODIFY " + std::to_string(id) + ' ' + std::to_string(newPrice) + " 0");
+        if (eventLog) logEvent("MODIFY " + std::to_string(id) + ' ' + std::to_string(newPrice) + " 0");
         return result;
     }
 
@@ -197,7 +197,7 @@ SubmitResult OrderBook::modify(OrderId id, Price newPrice, Quantity newQty) {
         resting.qty = newQty;
         result.status = OrderStatus::Resting;
         result.restingQty = newQty;
-        logEvent("MODIFY " + std::to_string(id) + ' ' + std::to_string(newPrice) + ' ' + std::to_string(newQty));
+        if (eventLog) logEvent("MODIFY " + std::to_string(id) + ' ' + std::to_string(newPrice) + ' ' + std::to_string(newQty));
         return result;
     }
 
@@ -208,9 +208,9 @@ SubmitResult OrderBook::modify(OrderId id, Price newPrice, Quantity newQty) {
     replacement.timestamp = 0; // re-stamp: new arrival time
     removeResting(idxIt);
     result = submitLimit(replacement);
-    logEvent("MODIFY " + std::to_string(id) + ' ' + std::to_string(newPrice) + ' ' + std::to_string(newQty));
+    if (eventLog) logEvent("MODIFY " + std::to_string(id) + ' ' + std::to_string(newPrice) + ' ' + std::to_string(newQty));
     for (const auto& t : result.trades) {
-        logEvent("FILL " + std::to_string(t.price) + ' ' + std::to_string(t.qty) + ' ' +
+        if (eventLog) logEvent("FILL " + std::to_string(t.price) + ' ' + std::to_string(t.qty) + ' ' +
                  std::to_string(t.makerId) + ' ' + std::to_string(t.takerId));
     }
     return result;
