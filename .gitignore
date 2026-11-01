@@ -43,3 +43,8 @@ desktop.ini
 
 # Local planning docs
 RESUME_PROJECT_ROADMAP.md
+
+# benchmark / local build output
+build-*/
+bench-results/
+trades.csv

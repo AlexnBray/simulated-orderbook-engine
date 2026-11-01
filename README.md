@@ -120,7 +120,8 @@ after every operation in the tests.
 with `taskset -c 2`, fixed seed 42. Workload: 1M operations, 60% limit (about half cross) / 15% market /
 25% cancel. Before/after binaries were run **interleaved** (A, B, A, B…) and the tables show the
 **median** across rounds. Latency includes about 20–30 ns of `steady_clock` overhead per sample.
-Reproduce with `python3 bench/compare.py <build-dir> 0 7 orderbook_bench`.
+Reproduce **every table below** (rebuilds the baseline from commit `45fed4c`, step 1 and the current engine,
+then runs all three benchmarks, about 2 minutes): `bash bench/reproduce.sh [out_dir] [cpu]`.
 
 ### Optimization story (7 interleaved rounds, empty starting book)
 
