@@ -1,0 +1,14 @@
+# Regression scenario: time priority, reduce-in-place vs cancel/replace, cancel, market.
+# Expected (asserted in tests/test_replay.cpp):
+#   id 1 reduced to 4 keeps priority; id 2 increased to 6 goes behind id 3
+#   MARKET BID 6 -> 4@100 (maker 1), 2@100 (maker 3)
+#   final asks: id 3 qty 3 @100, id 2 qty 6 @100 ; bids: id 4 qty 10 @98 (market order consumed id 5)
+LIMIT ASK 100 5
+LIMIT ASK 100 5
+LIMIT ASK 100 5
+MODIFY 1 100 4
+MODIFY 2 100 6
+LIMIT BID 98 10
+MARKET BID 6
+LIMIT BID 97 1 99
+CANCEL 99

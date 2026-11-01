@@ -1,0 +1,12 @@
+# Demo session: build a two-sided book, trade through it, amend and cancel.
+LIMIT BID 99 10
+LIMIT BID 98 15
+LIMIT BID 97 20
+LIMIT ASK 101 10
+LIMIT ASK 102 15
+LIMIT ASK 103 20
+MARKET BID 12         # lifts all of 101 and 2 @ 102
+LIMIT ASK 98 20       # crosses: hits 99 then 98, nothing rests
+MODIFY 3 96 20        # move the 97 bid down (loses priority)
+CANCEL 6
+LIMIT BID 100 5

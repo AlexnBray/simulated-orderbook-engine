@@ -1,0 +1,8 @@
+# Regression scenario: crossing limit sweeps two ask levels and rests the remainder.
+# Expected (asserted in tests/test_replay.cpp):
+#   trades: 5@100 (maker 1), 5@101 (maker 2)
+#   final:  best bid 102 (id 4, qty 2), best ask 105 (id 3, qty 5)
+LIMIT ASK 100 5
+LIMIT ASK 101 5
+LIMIT ASK 105 5
+LIMIT BID 102 12
